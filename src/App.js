@@ -19,16 +19,16 @@ import { ColorModeContext, useMode } from "./theme";
 function App() {
   const [theme, colorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
 
   
-  const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate("/admin/login");
-  }
-  }, [isAuthenticated, navigate]);
+  // const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
+  // useEffect(() => {
+  //   if (!isAuthenticated) {
+  //     navigate("/admin/login");
+  // }
+  // }, [isAuthenticated, navigate]);
 
 
   return (
@@ -36,9 +36,9 @@ function App() {
       <ThemeProvider theme={theme}> 
         <CssBaseline />
         <div className="app">
-          {isAuthenticated && <Sidebar isSidebar={isSidebar} />}
+          {/* {isAuthenticated && <Sidebar isSidebar={isSidebar} />} */}
           <main className="content">
-          {isAuthenticated && <Topbar setIsSidebar={setIsSidebar} />}
+          {/* {isAuthenticated && <Topbar setIsSidebar={setIsSidebar} />} */}
             <Topbar setIsSidebar={setIsSidebar} />
             <Routes>
              
