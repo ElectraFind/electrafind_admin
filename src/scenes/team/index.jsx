@@ -1,37 +1,13 @@
 import { Box, Typography, useTheme } from "@mui/material";
-import { DataGrid, GridToolbar} from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import { mockDataTeam } from "../../data/mockData";
 import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
 import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
 import Header from "../../components/Header";
-import { useProviders } from "../../api/useProviders";
-import { useEffect,useState } from "react";
 
 const Team = () => {
-
-  const [providers,setProviders] = useState([]);
-
-  const {getProviderDetails} = useProviders();
-
-  const ProviderDetails =async()=>{
-    try {
-      const response =await  getProviderDetails();
-      setProviders(response.data);
-    
-    } catch (error) {
-      console.log("err",error);
-    }
-  }
-
-  useEffect(()=>{
-ProviderDetails();
-  },[])
-
-
-
-
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const columns = [
@@ -42,21 +18,15 @@ ProviderDetails();
       flex: 1,
       cellClassName: "name-column--cell",
     },
-    // {
-    //   field: "age",
-    //   headerName: "Age",
-    //   type: "number",
-    //   headerAlign: "left",
-    //   align: "left",
-    // },
-    // {
-    //   field: "role",
-    //   headerName: "Role",
-    //   flex: 1,
-    //   cellClassName: "name-column--cell",
-    // },
     {
-      field: "phone_number",
+      field: "age",
+      headerName: "Age",
+      type: "number",
+      headerAlign: "left",
+      align: "left",
+    },
+    {
+      field: "phone",
       headerName: "Phone Number",
       flex: 1,
     },
@@ -66,7 +36,7 @@ ProviderDetails();
       flex: 1,
     },
     {
-      field: "availability",
+      field: "accessLevel",
       headerName: "Access Level",
       flex: 1,
       renderCell: ({ row: { access } }) => {
@@ -78,17 +48,17 @@ ProviderDetails();
             display="flex"
             justifyContent="center"
             backgroundColor={
-              access === "available"
-                ? colors.greenAccent[600]
-                : access === "unavailable"
-                ? colors.redAccent[500]
-                : colors.redAccent[700]
+              access === "Not Available"
+                ? colors.redAccent[700]
+                : access === "Under Repair"
+                ? colors.greenAccent[300]
+                : colors.greenAccent[600]
             }
             borderRadius="4px"
           >
-            {access === "available" && <AdminPanelSettingsOutlinedIcon />}
-            {access === "unavailable" && <SecurityOutlinedIcon />}
-            {access === "under repair" && <LockOpenOutlinedIcon />}
+            {access === "admin" && <AdminPanelSettingsOutlinedIcon />}
+            {access === "manager" && <SecurityOutlinedIcon />}
+            {access === "user" && <LockOpenOutlinedIcon />}
             <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
               {access}
             </Typography>
@@ -100,7 +70,7 @@ ProviderDetails();
 
   return (
     <Box m="20px">
-      <Header title="TEAM" subtitle="Provider Management" />
+      <Header title="Providers" subtitle="Details chart" />
       <Box
         m="40px 0 0 0"
         height="75vh"
@@ -128,16 +98,9 @@ ProviderDetails();
           "& .MuiCheckbox-root": {
             color: `${colors.greenAccent[200]} !important`,
           },
-          "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
-            color: `${colors.grey[100]} !important`,
-          },
         }}
       >
-        <DataGrid 
-          checkboxSelection rows={providers} 
-          columns={columns} 
-          components={{ Toolbar: GridToolbar }}
-        />
+        <DataGrid checkboxSelection rows={mockDataTeam} columns={columns} />
       </Box>
     </Box>
   );

@@ -4,53 +4,35 @@ import { tokens } from "../../theme";
 import { mockDataContacts } from "../../data/mockData";
 import Header from "../../components/Header";
 import { useTheme } from "@mui/material";
-import { useDrivers } from "../../api/useDrivers";
-import { useEffect, useState } from "react";
 
 const Contacts = () => {
-
-  const [drivers,setDrivers] = useState([]);
-
-  const {getDriverDetails} = useDrivers();
-
-  const DriverDetails =async()=>{
-    try {
-      const response =await  getDriverDetails();
-      setDrivers(response.data);
-    
-    } catch (error) {
-      console.log("err",error);
-    }
-  }
-
-  useEffect(()=>{
-    DriverDetails();
-  },[])
-
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-
-  
   const columns = [
     { field: "id", headerName: "ID", flex: 0.5 },
-    // { field: "registrarId", headerName: "Registrar ID" },
+    { field: "registrarId", headerName: "Registrar ID" },
     {
       field: "name",
       headerName: "Name",
       flex: 1,
       cellClassName: "name-column--cell",
     },
-    // {
-    //   field: "age",
-    //   headerName: "Age",
-    //   type: "number",
-    //   headerAlign: "left",
-    //   align: "left",
-    // },
     {
-      field: "phone_number",
+      field: "age",
+      headerName: "Age",
+      type: "number",
+      headerAlign: "left",
+      align: "left",
+    },
+    {
+      field: "phone",
       headerName: "Phone Number",
+      flex: 1,
+    },
+    {
+      field: "email",
+      headerName: "Email",
       flex: 1,
     },
     {
@@ -63,23 +45,18 @@ const Contacts = () => {
       headerName: "City",
       flex: 1,
     },
-    // {
-    //   field: "zipCode",
-    //   headerName: "Zip Code",
-    //   flex: 1,
-    // },
     {
-      field: "license_number",
-      headerName: "License Number",
+      field: "zipCode",
+      headerName: "Zip Code",
       flex: 1,
     },
   ];
-  
+
   return (
     <Box m="20px">
       <Header
-        title="Users"
-        subtitle="Driver management"
+        title="CONTACTS"
+        subtitle="List of Contacts for Future Reference"
       />
       <Box
         m="40px 0 0 0"
@@ -114,7 +91,7 @@ const Contacts = () => {
         }}
       >
         <DataGrid
-          rows={drivers}
+          rows={mockDataContacts}
           columns={columns}
           components={{ Toolbar: GridToolbar }}
         />

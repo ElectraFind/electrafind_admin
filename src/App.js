@@ -1,5 +1,6 @@
-import React,{ useEffect, useState } from "react";
-import { Routes, Route ,useNavigate} from "react-router-dom";
+import React,{ useState } from "react";
+
+import { Routes, Route ,Navigate} from "react-router-dom";
 import Topbar from "./scenes/global/Topbar";
 import Sidebar from "./scenes/global/Sidebar";
 import Dashboard from "./scenes/dashboard";
@@ -7,52 +8,89 @@ import Team from "./scenes/team";
 import Invoices from "./scenes/invoices";
 import Contacts from "./scenes/contacts";
 import Bar from "./scenes/bar";
+import Form from "./scenes/form";
 import Line from "./scenes/line";
 import Pie from "./scenes/pie";
 import FAQ from "./scenes/faq";
-import AdminLogin from "./components/AdminLogin";
-import AdminSignup from "./components/AdminSignup";
+
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
-
+import Calendar from "./scenes/calendar/calendar";
+import LoginPage from "./scenes/auth/LoginPage";
+import SignupPage from "./scenes/auth/SignupPage";
 
 function App() {
   const [theme, colorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
-  // const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Manage user authentication state
 
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+  };
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const response = await fetch('/api/login', {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ email, password }),
+  //     });
+  //     if (response.ok) {
+  //       const data = await response.json();
+  //       onLogin(data.token); // Save token and log the user in
+  //     } else {
+  //       alert('Invalid login credentials');
+  //     }
+  //   } catch (error) {
+  //     console.error('Login error:', error);
+  //   }
+  // };
   
-  // const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
-  // useEffect(() => {
-  //   if (!isAuthenticated) {
-  //     navigate("/admin/login");
-  // }
-  // }, [isAuthenticated, navigate]);
-
 
   return (
     <ColorModeContext.Provider value={colorMode}>
-      <ThemeProvider theme={theme}> 
+      <ThemeProvider theme={theme}>
         <CssBaseline />
         <div className="app">
-          {/* {isAuthenticated && <Sidebar isSidebar={isSidebar} />} */}
+          {isLoggedIn && <Sidebar isSidebar={isSidebar} />}
           <main className="content">
-          {/* {isAuthenticated && <Topbar setIsSidebar={setIsSidebar} />} */}
-            <Topbar setIsSidebar={setIsSidebar} />
+            {isLoggedIn && <Topbar setIsSidebar={setIsSidebar} onLogout={handleLogout}/>}
             <Routes>
-             
-              <Route path="/admin/login" element={<AdminLogin />}/>
-              <Route path="admin/signup" element={<AdminSignup/>}/>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/team" element={<Team />} />
-              <Route path="/contacts" element={<Contacts />} />
-              <Route path="/invoices" element={<Invoices />} />
-              <Route path="/bar" element={<Bar />} />
-              <Route path="/pie" element={<Pie />} />
-              <Route path="/line" element={<Line />} />
-              <Route path="/faq" element={<FAQ />} />
-             
+              {/* Authentication Routes */}
+              <Route
+                path="/login"
+                element={
+                  isLoggedIn ? <Navigate to="/" /> : <LoginPage onLogin={handleLogin} />
+                }
+              />
+              <Route
+                path="/signup"
+                element={
+                  isLoggedIn ? <Navigate to="/" /> : <SignupPage />
+                }
+              />
+              {/* Protected Routes */}
+              {isLoggedIn ? (
+                <>
+                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/team" element={<Team />} />
+                  <Route path="/contacts" element={<Contacts />} />
+                  <Route path="/invoices" element={<Invoices />} />
+                  <Route path="/form" element={<Form />} />
+                  <Route path="/bar" element={<Bar />} />
+                  <Route path="/pie" element={<Pie />} />
+                  <Route path="/line" element={<Line />} />
+                  <Route path="/faq" element={<FAQ />} />
+                  <Route path="/calendar" element={<Calendar />} />
+                </>
+              ) : (
+                <Route path="*" element={<Navigate to="/login" />} />
+              )}
             </Routes>
           </main>
         </div>
